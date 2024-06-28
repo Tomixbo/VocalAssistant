@@ -5,18 +5,11 @@ from typing import Optional
 
 import streamlit.components.v1 as components
 
-_RELEASE = bool(os.environ.get("RELEASE", "True"))
 
-if _RELEASE:
-    build_dir = Path(__file__).parent.absolute() / "frontend" / "build"
-    _audio_recorder = components.declare_component(
-        "audio_recorder", path=build_dir
-    )
-else:
-    _audio_recorder = components.declare_component(
-        "audio_recorder",
-        url="http://localhost:3001",
-    )
+build_dir = Path(__file__).parent.absolute() / "frontend" / "build"
+_audio_recorder = components.declare_component(
+    "audio_recorder", path=build_dir
+)
 
 
 def audio_recorder(
