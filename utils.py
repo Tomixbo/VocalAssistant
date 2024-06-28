@@ -54,22 +54,23 @@ def sticky_header():
 
     # make header sticky.
     st.markdown(
-        """
+        f"""
             <div class='fixed-header'/>
             <style>
-                div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {
+                div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {{
                     position: sticky;
                     top: 2.875rem;
-                    background-color: white;
                     z-index: 999;
-                }
-                .fixed-header {
+                }}
+                .fixed-header {{
                     border-bottom: 1px solid black;
-                }
+                }}
             </style>
         """,
         unsafe_allow_html=True
     )
+
+
 
 # Function to make footer fixed at the bottom
 def sticky_footer():
@@ -80,7 +81,6 @@ def sticky_footer():
                     position: sticky;
                     bottom: 0;
                     width: 100%;
-                    background-color: white;
                     z-index: 999;
                 }
                 .fixed-footer {
