@@ -39,13 +39,17 @@ footer = st.container()
 # Add content to the footer
 with footer:
     sticky_footer()
-    st.session_state.audio_bytes = audio_recorder(text="", icon_size="2x")
+
+    
     # Only display the audio recorder after the initial load
     if not st.session_state.loaded:
         # Introduce a small delay
         time.sleep(1)
         st.session_state.loaded = True
+        # Ajouter un script JavaScript pour redimensionner la fenêtre après le chargement de la page
+        
         st.rerun()
+    st.session_state.audio_bytes = audio_recorder(text="", icon_size="2x")
     audio_file = text_to_speech(message_init)
     with open(audio_file, "rb") as f:
         data = f.read()
@@ -58,7 +62,6 @@ with footer:
     st.markdown(md, unsafe_allow_html=True)
     time.sleep(1)
     os.remove(audio_file)
-
 
 
 # Process the recorded audio if available
@@ -96,4 +99,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.write(final_response)
             st.session_state.messages.append({"role": "assistant", "content": final_response})
             os.remove(audio_file)
+
 
