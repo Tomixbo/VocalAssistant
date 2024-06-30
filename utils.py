@@ -1,10 +1,28 @@
 from openai import OpenAI
 import streamlit as st
 import base64
+import time
 
 # Set OpenAI API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-model = "gpt-3.5-turbo"
+model = "gpt-4o"
+
+assistant = None
+thread = None
+
+def init_model(assistant_id, thread_id=None):
+    global assistant  # Déclare la variable assistant comme globale
+    global thread    # Déclare la variable thread comme globale
+
+    assistant=client.beta.assistants.retrieve(assistant_id=assistant_id)
+    print(f"ASSISTANT::: {assistant.id}")
+    if not thread_id:
+        thread=client.beta.threads.create()
+    else:
+        thread=client.beta.threads.retrieve(thread_id=thread_id)
+    print(f"THREAD::: {thread.id}")
+    return thread
+
 
 def speech_to_text(audio_data):
     try:
@@ -30,14 +48,34 @@ def text_to_speech(input_text):
         response.stream_to_file(webm_file_path)
     return webm_file_path
 
-def get_answer(messages):
-    system_message = [{"role": "system", "content": "You are an helpful AI chatbot, that answers questions asked by User. Limit your answers to 1 to 3 sentences, and keep your answers as short as possible because you are a voice assistant."}]
-    messages = system_message + messages
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages
+def get_answer(message, thread_):
+    
+    # === Create a Message ===
+    message = client.beta.threads.messages.create(
+        thread_id=thread_.id,
+        role="user",
+        content=message
     )
-    return response.choices[0].message.content
+
+    # === Run our Assistant ===
+    run = client.beta.threads.runs.create(
+        thread_id=thread_.id,
+        assistant_id=assistant.id,
+        instructions=""
+    )
+
+    while True:
+        run = client.beta.threads.runs.retrieve(thread_id=thread_.id, run_id=run.id)
+        print(f"\n RUN STATUS : ---> {run.status}")
+        try:
+            if run.status == "completed":
+                # Get messages here once Run is completed!
+                messages = client.beta.threads.messages.list(thread_id=thread_.id)
+                return messages.data[0].content[0].text.value
+        except Exception as e:
+            print(f"An error occurred while retrieving the run : {e}")
+            break
+
 
 def autoplay_audio(file_path: str):
     with open(file_path, "rb") as f:
@@ -60,6 +98,7 @@ def sticky_header():
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {{
                     position: sticky;
                     top: 2.875rem;
+                    background-color: white;
                     z-index: 999;
                 }}
                 .fixed-header {{
@@ -81,6 +120,7 @@ def sticky_footer():
                     position: sticky;
                     bottom: 0;
                     width: 100%;
+                    background-color: white;
                     z-index: 999;
                 }
                 .fixed-footer {
