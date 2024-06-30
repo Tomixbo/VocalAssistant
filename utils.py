@@ -4,7 +4,7 @@ import base64
 
 # Set OpenAI API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-model = "gpt-3.5-turbo"
+model = "gpt-4o"
 
 def speech_to_text(audio_data):
     try:
@@ -60,6 +60,7 @@ def sticky_header():
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {{
                     position: sticky;
                     top: 2.875rem;
+                    background-color: white;
                     z-index: 999;
                 }}
                 .fixed-header {{
@@ -81,6 +82,7 @@ def sticky_footer():
                     position: sticky;
                     bottom: 0;
                     width: 100%;
+                    background-color: white;
                     z-index: 999;
                 }
                 .fixed-footer {
