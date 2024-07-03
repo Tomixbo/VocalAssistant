@@ -1,2 +1,5 @@
 streamlit
 openai
+uvicorn
+fastapi
+openpyxl

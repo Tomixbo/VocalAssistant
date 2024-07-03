@@ -41,8 +41,16 @@ initialize_session_state(message_init)
 
 # HEADER STICKY
 with st.container():
-    st.title("Assistant Vocal 🤖")
-    st.write("Bienvenue, appuyez sur l'icone d'enregistrement pour interagir avec votre assistant.")
+    st.title("INITIUM Vocal Assistant 🤖")
+    st.write("""
+             Bienvenue, \n
+             Je suis là en tant qu'assistant vocal, spécialisé en comptabilité et fiscalité.\n
+             Je peux aussi vous assister dans l'exécution de quelques actions telles que :\n
+             - Lister les dossiers du cabinet\n
+             - Ajouter un nouveau dossier à traiter pour le cabinet\n
+             \n
+             Appuyez sur l'icone d'enregistrement ou écrire dans la zone de texte pour interagir avec votre assistant.
+             """)
     sticky_header()
 
 # PLACEHOLDER FOR MESSAGES
