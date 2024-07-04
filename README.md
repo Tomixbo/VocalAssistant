@@ -7,5 +7,8 @@ Vocal Assistant with Streamlit and OpenAI
 - Using Assistant API
 - List availables GPT model
 - Multissession Chat (separated thread)
-- Limited topics : Accounting and Taxation
+## Intitium Assistant Vocal :
 - Functions : get_dossiers, add_dossier
+## HUGO Assistant Vocal :
+- Assistant Accounting and Taxation
+- Knowledge : File retrieving
