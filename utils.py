@@ -103,15 +103,15 @@ def sticky_header():
         """
             <div class='fixed-header'/>
             <style>
-                div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {{
+                div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {
                     position: sticky;
                     top: 2.875rem;
                     background-color: white;
-                    z-index: 999;
-                }}
-                .fixed-header {{
+                    z-index: 990;
+                }
+                .fixed-header {
                     border-bottom: 1px solid black;
-                }}
+                }
             </style>
         """,
         unsafe_allow_html=True
@@ -129,7 +129,7 @@ def sticky_footer():
                     bottom: 0;
                     width: 100%;
                     background-color: white;
-                    z-index: 999;
+                    z-index: 990;
                 }
                 .fixed-footer {
                     top:100px;
