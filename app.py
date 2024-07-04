@@ -27,9 +27,9 @@ def initialize_session_state(message_init):
         os.remove(audio_file) 
     
     if "thread" not in st.session_state:
-        st.session_state.thread = init_model(st.secrets["ASSISTANT_ID"])
+        st.session_state.thread = init_model(st.secrets["ASSISTANT_ID_INTITIUM"])
     else:
-        st.session_state.thread = init_model(st.secrets["ASSISTANT_ID"], st.session_state.thread.id)
+        st.session_state.thread = init_model(st.secrets["ASSISTANT_ID_INTITIUM"], st.session_state.thread.id)
     
     if 'audio_bytes' not in st.session_state:
         st.session_state.audio_bytes = None
@@ -44,8 +44,7 @@ with st.container():
     st.title("INITIUM Vocal Assistant 🤖")
     st.write("""
              Bienvenue, \n
-             Je suis là en tant qu'assistant vocal, spécialisé en comptabilité et fiscalité.\n
-             Je peux aussi vous assister dans l'exécution de quelques actions telles que :\n
+             Je suis là en tant qu'assistant vocal qui vous assiste dans l'exécution de quelques actions telles que :\n
              - Lister les dossiers du cabinet\n
              - Ajouter un nouveau dossier à traiter pour le cabinet\n
              \n

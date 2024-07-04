@@ -2,13 +2,12 @@ import json
 from openai import OpenAI
 import streamlit as st
 import base64
-import time
 import requests
 
 
 # Set OpenAI API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-model = "gpt-4o"
+#model = "gpt-3.5-turbo-0125"
 
 assistant = None
 thread = None
@@ -47,7 +46,7 @@ def text_to_speech(input_text):
         input=input_text
     )
     webm_file_path = "temp_audio_play.mp3"
-    with open(webm_file_path, "wb") as f:
+    with open(webm_file_path, "wb") as f:  # noqa: F841
         response.stream_to_file(webm_file_path)
     return webm_file_path
 
@@ -101,7 +100,7 @@ def sticky_header():
 
     # make header sticky.
     st.markdown(
-        f"""
+        """
             <div class='fixed-header'/>
             <style>
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {{
@@ -189,7 +188,7 @@ def add_dossier(nom_du_client, date_de_debut, date_de_fin_prevue, etat_d_avancem
         response = requests.post(url, json=data)
         if response.status_code == 200:
             print("Dossier ajouté avec succès:", response.json())
-            return f"Dossier ajouté avec succès: response.json()"
+            return f"Dossier ajouté avec succès: {response.json()}"
         else:
             print("Erreur lors de l'ajout du dossier:", response.status_code, response.text)
             return f"Erreur lors de l'ajout du dossier, {response.text}"
