@@ -5,9 +5,23 @@ import os
 from audio_recorder_streamlit import audio_recorder
 import base64
 import uuid
+from streamlit_option_menu import option_menu
 
 # Utiliser st.selectbox pour imiter les onglets dans la barre latérale
-option = st.sidebar.selectbox(":small_red_triangle_down: Choisissez un assistant ", ("INTITIUM", "HUGO"))
+# option = st.sidebar.selectbox(":small_red_triangle_down: Choisissez un assistant ", ("INTITIUM", "HUGO"))
+option = option_menu(
+    menu_title=None,
+    options=["HUGO", "INTITIUM"],
+    icons=["box-fill","box-seam"],
+    menu_icon="cast",
+    default_index=0,
+    orientation="horizontal",
+    styles={
+        "nav": {"width" : "100%"},
+        "nav-link": {"--hover-color" : "#d1cfcfd3"},
+        "nav-link-selected": {"background-color" : "#ee5c22d3"}
+    }
+)
 
 
 # Define initial messages
