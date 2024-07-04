@@ -58,9 +58,11 @@ def initialize_session_state(message_init, assistant_id, session_key):
         st.session_state[f"{session_key}_loaded"] = False
 
 def display_assistant(session_key, title, welcome_message, assistant_id, message_init):
-    st.title(title)
-    st.write(welcome_message)
-    sticky_header()
+    # HEADER STICKY
+    with st.container():
+        st.title(title)
+        st.write(welcome_message)
+        sticky_header()
     initialize_session_state(message_init, assistant_id, session_key)
 
     # PLACEHOLDER FOR MESSAGES
@@ -132,10 +134,10 @@ def display_assistant(session_key, title, welcome_message, assistant_id, message
                 message_status = None
 
 if option == "INTITIUM":
-    display_assistant("intitium", "INITIUM Vocal Assistant 🤖", 
+    display_assistant("intitium", "INTITIUM - Assistant Vocal 🤖", 
                       """
                       Bienvenue, \n
-                      Je suis là en tant qu'assistant vocal qui vous assiste dans l'exécution de quelques actions telles que :\n
+                      Je suis l'assistant vocal qui vous assiste pour l'exécution des actions suivante :\n
                       - Lister les dossiers du cabinet\n
                       - Ajouter un nouveau dossier à traiter pour le cabinet\n
                       \n
@@ -143,9 +145,13 @@ if option == "INTITIUM":
                       """, st.secrets["ASSISTANT_ID_INTITIUM"], message_init_intitium)
 
 elif option == "HUGO":
-    display_assistant("hugo", "HUGO Vocal Assistant 🤖", 
+    display_assistant("hugo", "HUGO - Assistant Vocal 🤖", 
                       """
                       Bienvenue, \n
-                      Je suis là en tant qu'assistant vocal spécialisé en comptabilité et fiscalité,
+                      Je suis votre assistant vocal spécialisé en comptabilité et fiscalité.\n
+                      Documents de référence :\n
+                      - ACT_180424_120912.pdf => Actualité BOFIP du 12/09/2012 au 18/04/2024\n
+                      - MC_2024_XXXX.docx => Mémento 2024 Editions Francis Lefebvre - Comptabilité\n
+                      - MF_2024_XXXX.docx => Mémento 2024 Editions Francis Lefebvre - Fiscalité\n
                       Appuyez sur l'icone d'enregistrement ou écrire dans la zone de texte pour interagir avec votre assistant.
                       """, st.secrets["ASSISTANT_ID_HUGO"], message_init_hugo)

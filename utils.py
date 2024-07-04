@@ -73,7 +73,28 @@ def get_answer(message, thread_):
             if run.status == "completed":
                 # Get messages here once Run is completed!
                 messages = client.beta.threads.messages.list(thread_id=thread_.id)
-                return messages.data[0].content[0].text.value
+                response = messages.data[0].content[0].text.value
+                annotations = messages.data[0].content[0].text.annotations
+                print(response, annotations)
+                citations = []
+
+                # Iterate over the annotations and add footnotes
+                for index, annotation in enumerate(annotations):
+                    # Replace the text with a footnote
+                    response = response.replace(annotation.text, f' [{index}]')
+                    # Gather citations based on annotation attributes
+                    if (file_citation := getattr(annotation, 'file_citation', None)):
+                        cited_file = client.files.retrieve(file_citation.file_id)
+                        if cited_file.filename not in ' '.join(citations):
+                            citations.append(f'[{index}] - {cited_file.filename}')
+                    elif (file_path := getattr(annotation, 'file_path', None)):
+                        cited_file = client.files.retrieve(file_path.file_id)
+                        citations.append(f'[{index}] - Click <here> to download {cited_file.filename} \n')
+                        # Note: File download functionality not implemented above for brevity
+                # Add footnotes to the end of the message before displaying to user
+
+                response += '\n\n' + '\n\n'.join(citations)    
+                return response
             
             elif run.status == "requires_action":
                     print("FUNCTION CALLING NOW...")
