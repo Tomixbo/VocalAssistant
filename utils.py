@@ -2,7 +2,7 @@ import json
 from openai import OpenAI
 import streamlit as st
 import base64
-import requests
+from REST import read_dossiers, create_dossier
 
 
 # Set OpenAI API key from Streamlit secrets
@@ -164,38 +164,31 @@ def sticky_footer():
     )
 
 def get_dossiers():
-    url = "http://127.0.0.1:8000/dossiers"
+    result = read_dossiers()
+    print(result)
+    if result != False:
+        total_dossiers = result["total_dossiers"]
+        dossiers = result["dossiers"]
+        tasks_list = [f"Total dossiers: {total_dossiers}"]
 
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            result = response.json()
-            total_dossiers = result["total_dossiers"]
-            dossiers = result["dossiers"]
-            tasks_list = [f"Total dossiers: {total_dossiers}"]
+        for d in dossiers:
+            task_description = (
+                f"Numero_de_Dossier: {d['Numero_de_Dossier']}, "
+                f"Nom_du_Client: {d['Nom_du_Client']}, "
+                f"Date_de_Debut: {d['Date_de_Debut']}, "
+                f"Date_de_Fin_Prevue: {d['Date_de_Fin_Prevue']}, "
+                f"Etat_d_Avancement: {d['Etat_d_Avancement']}, "
+                f"Responsable: {d['Responsable']}, "
+                f"Commentaires: {d['Commentaires']}"
+            )
+            tasks_list.append(task_description)
 
-            for d in dossiers:
-                task_description = (
-                    f"Numero_de_Dossier: {d['Numero_de_Dossier']}, "
-                    f"Nom_du_Client: {d['Nom_du_Client']}, "
-                    f"Date_de_Debut: {d['Date_de_Debut']}, "
-                    f"Date_de_Fin_Prevue: {d['Date_de_Fin_Prevue']}, "
-                    f"Etat_d_Avancement: {d['Etat_d_Avancement']}, "
-                    f"Responsable: {d['Responsable']}, "
-                    f"Commentaires: {d['Commentaires']}"
-                )
-                tasks_list.append(task_description)
+        return "\n".join(tasks_list)
+    else:
+        return "Erreur fetch dossier"
 
-            return "\n".join(tasks_list)
-        else:
-            return "Failed to fetch dossiers"
-
-    except requests.exceptions.RequestException as e:
-        print("Error occurred during API Request: ", e)
-        return "Error occurred during API Request"
     
 def add_dossier(nom_du_client, date_de_debut, date_de_fin_prevue, etat_d_avancement, responsable, commentaires):
-    url = "http://127.0.0.1:8000/dossiers/add"
     data = {
         "Nom_du_Client": nom_du_client,
         "Date_de_Debut": date_de_debut,
@@ -204,18 +197,15 @@ def add_dossier(nom_du_client, date_de_debut, date_de_fin_prevue, etat_d_avancem
         "Responsable": responsable,
         "Commentaires": commentaires
     }
+    print(data)
+    response = create_dossier(data)
+    if response != False:
+        print("Dossier ajouté avec succès:", response)
+        return f"Dossier ajouté avec succès: {response}"
+    else:
+        return f"Error à l'ajout du dossier"
 
-    try:
-        response = requests.post(url, json=data)
-        if response.status_code == 200:
-            print("Dossier ajouté avec succès:", response.json())
-            return f"Dossier ajouté avec succès: {response.json()}"
-        else:
-            print("Erreur lors de l'ajout du dossier:", response.status_code, response.text)
-            return f"Erreur lors de l'ajout du dossier, {response.text}"
 
-    except requests.exceptions.RequestException as e:
-        print("Erreur lors de la requête API:", e)
 
 def call_required_functions(required_actions, thread_, run_):
     if not run_:
