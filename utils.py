@@ -94,6 +94,7 @@ def get_answer(message, thread_):
                 # Add footnotes to the end of the message before displaying to user
 
                 response += '\n\n' + '\n\n'.join(citations)    
+                print(response)
                 return response
             
             elif run.status == "requires_action":

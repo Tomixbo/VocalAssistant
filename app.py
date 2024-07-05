@@ -78,7 +78,7 @@ def display_assistant(session_key, title, welcome_message, assistant_id, message
         # Introduce a small delay
         time.sleep(1.5)
         st.session_state[f"{session_key}_loaded"] = True
-        st.experimental_rerun()
+        st.rerun()
 
     # FOOTER CONTAINER
     footer = st.container()
