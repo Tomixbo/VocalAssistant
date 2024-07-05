@@ -1,2 +1,6 @@
 streamlit
+streamlit_option_menu
 openai
+uvicorn
+fastapi
+openpyxl

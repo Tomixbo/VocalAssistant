@@ -166,3 +166,4 @@ cython_debug/
 
 #url
 url.txt
+.jetons_airtable.txt

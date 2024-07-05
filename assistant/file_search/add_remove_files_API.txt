@@ -1,0 +1,16 @@
+
+$headers = @{
+    "Authorization" = "Bearer $OPENAI_API_KEY"
+}
+
+$response = Invoke-WebRequest -Uri "https://api.openai.com/v1/files" -Headers $headers
+$response.Content | Out-File -FilePath "api_files.json"
+
+
+$jsonContent = Get-Content -Raw -Path "api_files.json" | ConvertFrom-Json
+
+foreach ($entry in $jsonContent.data) {
+    $idValue = $entry.id
+    $deleteUri = "https://api.openai.com/v1/files/$idValue"
+    Invoke-WebRequest -Uri $deleteUri -Method Delete -Headers $headers
+}
