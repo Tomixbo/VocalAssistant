@@ -3,6 +3,7 @@ from openai import OpenAI
 import streamlit as st
 import base64
 from REST import read_dossiers, create_dossier
+import requests
 
 
 # Set OpenAI API key from Streamlit secrets
@@ -167,7 +168,7 @@ def sticky_footer():
 def get_dossiers():
     result = read_dossiers()
     print(result)
-    if result != False:
+    if result:
         total_dossiers = result["total_dossiers"]
         dossiers = result["dossiers"]
         tasks_list = [f"Total dossiers: {total_dossiers}"]
@@ -188,6 +189,34 @@ def get_dossiers():
     else:
         return "Erreur fetch dossier"
 
+def get_collaborators():
+    response = requests.get("http://192.168.88.254:5000/get-collaborators")
+    
+    # Vérifier si la requête a réussi
+    if response.status_code == 200:
+        data = response.json()
+        
+        # Vérifier si la réponse contient un succès
+        if data.get("success"):
+            collabs = []
+            for c in data.get("collaborators", []):
+                collab_description = (
+                    f"Nom_du_Collaborateur: {c['Nom du Collaborateur']}, "
+                    f"Entreprise: {c['Entreprise']}, "
+                    f"Email: {c['Email']}, "
+                    f"Telephone: {c['Telephone']}"
+                )
+                collabs.append(collab_description)
+            
+            # Retourner la liste des collaborateurs sous forme de chaîne
+            return "\n".join(collabs)
+        else:
+            # Gérer le cas où il y a une erreur côté serveur
+            return f"Erreur du serveur: {data.get('error', 'Erreur inconnue')}"
+    else:
+        # Gérer le cas où la requête n'a pas réussi
+        return f"Erreur HTTP: {response.status_code}"
+
     
 def add_dossier(nom_du_client, date_de_debut, date_de_fin_prevue, etat_d_avancement, responsable, commentaires):
     data = {
@@ -200,11 +229,11 @@ def add_dossier(nom_du_client, date_de_debut, date_de_fin_prevue, etat_d_avancem
     }
     print(data)
     response = create_dossier(data)
-    if response != False:
+    if response:
         print("Dossier ajouté avec succès:", response)
         return f"Dossier ajouté avec succès: {response}"
     else:
-        return f"Error à l'ajout du dossier"
+        return "Error à l'ajout du dossier"
 
 
 
@@ -233,6 +262,13 @@ def call_required_functions(required_actions, thread_, run_):
                 responsable=arguments["Responsable"],
                 commentaires=arguments["Commentaires"]
             )
+            print(f"STUFFFF::::{output}")
+            tool_outputs.append({
+                "tool_call_id": action["id"],
+                "output": output
+            })
+        if func_name == "get_collaborators":
+            output = get_collaborators()
             print(f"STUFFFF::::{output}")
             tool_outputs.append({
                 "tool_call_id": action["id"],

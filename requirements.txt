@@ -4,3 +4,4 @@ openai
 uvicorn
 fastapi
 openpyxl
+flask

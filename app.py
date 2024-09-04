@@ -11,10 +11,10 @@ from streamlit_option_menu import option_menu
 # option = st.sidebar.selectbox(":small_red_triangle_down: Choisissez un assistant ", ("INTITIUM", "HUGO"))
 option = option_menu(
     menu_title=None,
-    options=["HUGO", "INTITIUM"],
-    icons=["box-fill","box-seam"],
+    options=["HUGO", "INTITIUM", "RUN_AUTO"],
+    icons=["box-fill","box-seam","box-seam"],
     menu_icon="cast",
-    default_index=0,
+    default_index=2,
     orientation="horizontal",
     styles={
         "nav": {"width" : "100%"},
@@ -26,6 +26,7 @@ option = option_menu(
 
 # Define initial messages
 message_init_intitium = "Bonjour, comment je peux vous assister?"
+message_init_run_auto = "Bonjour, comment je peux vous assister?"
 message_init_hugo = "Ton assistant vocal spécialisé en comptabilité et fiscalité"
 
 def initialize_session_state(message_init, assistant_id, session_key):
@@ -155,3 +156,13 @@ elif option == "HUGO":
                       - MF_2024_XXXX.docx => Mémento 2024 Editions Francis Lefebvre - Fiscalité\n
                       Appuyez sur l'icone d'enregistrement ou écrire dans la zone de texte pour interagir avec votre assistant.
                       """, st.secrets["ASSISTANT_ID_HUGO"], message_init_hugo)
+
+elif option == "RUN_AUTO":
+    display_assistant("run_auto", "RUN_AUTO - Assistant Vocal 🤖", 
+                      """
+                      Bienvenue, \n
+                      Je suis l'assistant vocal qui vous assiste pour l'exécution des actions suivante :\n
+                      - Lister les collaborateurs du cabinet\n
+                      \n
+                      Appuyez sur l'icone d'enregistrement ou écrire dans la zone de texte pour interagir avec votre assistant.
+                      """, st.secrets["ASSISTANT_ID_RUN_AUTO"], message_init_run_auto)
