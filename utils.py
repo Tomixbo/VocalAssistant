@@ -235,6 +235,28 @@ def add_dossier(nom_du_client, date_de_debut, date_de_fin_prevue, etat_d_avancem
     else:
         return "Error à l'ajout du dossier"
 
+def add_collaborator(nom_du_collaborateur, entreprise, email, telephone):
+    # Créer les données du nouveau collaborateur
+    data = {
+        "Nom_du_Collaborateur": nom_du_collaborateur,
+        "Entreprise": entreprise,
+        "Email": email,
+        "Telephone": telephone
+    }
+    
+    print(data)
+    
+    # Envoyer la requête POST au serveur Flask pour ajouter le collaborateur
+    response = requests.post("http://192.168.88.254:5000/add-collaborator", json=data)
+    
+    # Vérifier si la requête a réussi
+    if response.status_code == 200:
+        c = response.json()  # Récupérer la réponse JSON
+        collab = f"Nom_du_Collaborateur: {data['Nom_du_Collaborateur']}, Entreprise: {data['Entreprise']}, Email: {data['Email']}, Telephone: {data['Telephone']}"
+        print("Collaborateur ajouté avec succès:", collab)
+        return f"Collaborateur ajouté avec succès: {collab}"
+    else:
+        return f"Problème à l'ajout du nouveau collaborateur - Erreur {response.status_code}"
 
 
 def call_required_functions(required_actions, thread_, run_):
@@ -267,8 +289,20 @@ def call_required_functions(required_actions, thread_, run_):
                 "tool_call_id": action["id"],
                 "output": output
             })
-        if func_name == "get_collaborators":
+        elif func_name == "get_collaborators":
             output = get_collaborators()
+            print(f"STUFFFF::::{output}")
+            tool_outputs.append({
+                "tool_call_id": action["id"],
+                "output": output
+            })
+        elif func_name == "add_collaborator":
+            output = add_collaborator(
+                nom_du_collaborateur=arguments["Nom_du_Collaborateur"],
+                entreprise=arguments["Entreprise"],
+                email=arguments["Email"],
+                telephone=arguments["Telephone"]
+            )
             print(f"STUFFFF::::{output}")
             tool_outputs.append({
                 "tool_call_id": action["id"],

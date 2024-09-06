@@ -163,6 +163,7 @@ elif option == "RUN_AUTO":
                       Bienvenue, \n
                       Je suis l'assistant vocal qui vous assiste pour l'exécution des actions suivante :\n
                       - Lister les collaborateurs du cabinet\n
+                      - Ajouter un nouveau collaborateur au cabinet\n
                       \n
                       Appuyez sur l'icone d'enregistrement ou écrire dans la zone de texte pour interagir avec votre assistant.
                       """, st.secrets["ASSISTANT_ID_RUN_AUTO"], message_init_run_auto)
